@@ -7,6 +7,7 @@ echo 'building the applications...'
 def testApp() {
 
 echo 'testing the applications...'
+echo 'Replay'
 
 }
 
