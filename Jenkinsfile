@@ -5,14 +5,9 @@ pipeline {
       booleanParam(name: 'executeTests', defaultValue: true, description: '')
    }
    stages {
-      stage("Checkout") {
-         steps {
-            checkout scm
-         }
-      }
       stage("Build") {
          steps {
-            sh 'docker-compose build web'
+               sh 'docker build -t flask-jenkins:v1.0.0 .'
          }
       }
       stage("Tag and Push") {
@@ -24,7 +19,7 @@ pipeline {
       }
       stage("deploy") {
          steps {
-            sh "docker-compose up -d"
+               echo 'deploying the applicaiton...'
          }
       }
    }
