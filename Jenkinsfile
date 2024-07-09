@@ -1,61 +1,26 @@
 pipeline {
-
    agent any
-
+   parameters {
+      choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description: '')
+      booleanParam(name: 'executeTests', defaultValue: true, description: '')
+   }
    stages {
-
-      stage("build") {
-
+      stage("Build") {
          steps {
-
-            echo 'building the applicaiton...'
-
+               sh 'docker build -t flask-jenkins:v1.0.0 .'
          }
-
       }
-
-      stage("test") {
-
+      stage("Tag and Push") {
          steps {
-
-            echo 'testing the applicaiton...'
-
+              sh "docker tag jenkins-pipeline_web:latest ${DOCKER_USER_ID}/jenkins-app:${BUILD_NUMBER}"
+               sh "docker login -u ${DOCKER_USER_ID}-p ${DOCKER_USER_PASSWORD}"
+               sh "docker push ${DOCKER_USER_ID}/jenkins-app:${BUILD_NUMBER}"
          }
-
       }
-
       stage("deploy") {
-
          steps {
-
-            echo 'deploying the applicaiton...'
-
+               echo 'deploying the applicaiton...'
          }
-
       }
-
    }
-
-   post {
-
-         always {
-
-            echo 'building..'
-
-         }
-
-         success {
-
-               echo 'success'
-
-         }
-
-          failure {
-
-               echo 'failure'
-
-         }
-
-      }
-
-   }
+}
